@@ -20,19 +20,19 @@ const app = express();
 ========================================= */
 
 const fallbackTechnicalSkills = [
-  "React", "Node.js", "JavaScript", "Python", "MongoDB", "Firebase", 
+  "React", "Node.js", "JavaScript", "Python", "MongoDB", "Firebase",
   "TypeScript", "Express", "Tailwind", "REST APIs", "AWS", "Docker",
   "Java", "C++", "SQL", "Next.js", "Redux", "GraphQL"
 ];
 
 const fallbackSoftSkills = [
-  "Communication", "Leadership", "Teamwork", "Problem Solving", 
+  "Communication", "Leadership", "Teamwork", "Problem Solving",
   "Adaptability", "Creativity", "Critical Thinking", "Time Management"
 ];
 
 const extractSkillsFromText = (text, fallbacks) => {
   if (!text) return [];
-  return fallbacks.filter(skill => 
+  return fallbacks.filter(skill =>
     new RegExp(`\\b${skill}\\b`, 'gi').test(text)
   ).slice(0, 5);
 };
@@ -65,7 +65,6 @@ const client = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.OPENROUTER_API_KEY,
 });
-
 /* =========================================
    HOME ROUTE
 ========================================= */
@@ -183,19 +182,19 @@ ${cleanContext || prompt}`;
       // Robust JSON Extraction
       const firstBrace = response.indexOf('{');
       const lastBrace = response.lastIndexOf('}');
-      
+
       if (firstBrace !== -1 && lastBrace !== -1) {
         const jsonStr = response.substring(firstBrace, lastBrace + 1);
         const rawParsed = JSON.parse(jsonStr);
-        
+
         console.log("PARSED JSON SUCCESSFUL");
 
         // Normalize keys (handle atsScore, ats_score, etc.)
         const getVal = (keys, fallback = []) => {
-           for (const key of keys) {
-              if (rawParsed[key] !== undefined) return rawParsed[key];
-           }
-           return fallback;
+          for (const key of keys) {
+            if (rawParsed[key] !== undefined) return rawParsed[key];
+          }
+          return fallback;
         };
 
         parsedData = {
@@ -209,7 +208,7 @@ ${cleanContext || prompt}`;
 
         // Ensure recommendations is always an array
         if (!Array.isArray(parsedData.recommendations)) {
-           parsedData.recommendations = [String(parsedData.recommendations)];
+          parsedData.recommendations = [String(parsedData.recommendations)];
         }
       } else {
         throw new Error("No JSON object found in response");
@@ -379,7 +378,7 @@ app.get("/api/ai-profile/:firebaseUid", async (req, res) => {
     };
 
     const latestResume = resumes[0] || {};
-    
+
     // Detailed Profile Generation
     const technicalStrength = getAvg("Coding Assessment");
     const communicationConfidence = getAvg("Mock Interview");
@@ -389,10 +388,10 @@ app.get("/api/ai-profile/:firebaseUid", async (req, res) => {
     const latestAtsScore = latestResume.atsScore || 0;
 
     // Calculate overall readiness
-    const assessmentAvg = assessments.length > 0 
-      ? assessments.reduce((acc, curr) => acc + curr.score, 0) / assessments.length 
+    const assessmentAvg = assessments.length > 0
+      ? assessments.reduce((acc, curr) => acc + curr.score, 0) / assessments.length
       : 0;
-    
+
     const overallReadiness = Math.round((latestAtsScore + assessmentAvg) / (latestAtsScore > 0 && assessmentAvg > 0 ? 2 : 1)) || 70;
 
     const profile = {
@@ -420,7 +419,7 @@ app.get("/api/ai-profile/:firebaseUid", async (req, res) => {
     try {
       await CareerAnalytics.findOneAndUpdate(
         { firebaseUid },
-        { 
+        {
           ...profile,
           aptitudeScore: problemSolving,
           codingScore: technicalStrength,

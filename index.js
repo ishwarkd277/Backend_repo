@@ -13,6 +13,10 @@ import Notification from "./models/Notification.js";
 
 dotenv.config();
 
+console.log("OPENAI KEY EXISTS:", !!process.env.OPENAI_API_KEY);
+console.log("KEY VALUE:", process.env.OPENAI_API_KEY?.slice(0, 10)); 
+
+
 const app = express();
 
 /* =========================================

@@ -62,8 +62,8 @@ mongoose.connect(process.env.MONGO_URI)
 ========================================= */
 
 const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || process.env.OPENROUTER_API_KEY,
   baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPENROUTER_API_KEY,
 });
 /* =========================================
    HOME ROUTE
